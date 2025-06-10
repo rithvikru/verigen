@@ -71,8 +71,10 @@ def ltl_to_verilog(tlsf, prefix):
 def main():
     parser = argparse.ArgumentParser(description="Natural language to Verilog")
     parser.add_argument("--nl", required=True, help="requirement in natural language")
+
     parser.add_argument("--inputs", help="comma separated inputs")
     parser.add_argument("--outputs", help="comma separated outputs")
+
     parser.add_argument("--model", default="gpt-3.5-turbo", help="LLM model")
     parser.add_argument("--prompt", default="minimal", help="prompt file name in nl2spec/prompts")
     parser.add_argument("--prefix", default="controller", help="output file prefix")
