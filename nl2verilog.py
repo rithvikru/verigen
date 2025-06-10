@@ -25,7 +25,13 @@ def nl_to_ltl(nl, model, prompt):
         temperature=0.2,
     )
     formula, _ = backend.call(args)
-    return formula.strip()
+    # backend.call returns a tuple where the first element is the LTL formula
+    # and the second is a certainty score.  The formula itself may be returned
+    # either as a string or as an object from ``ltlf2dfa``.  Convert it to a
+    # string before stripping whitespace.
+    if isinstance(formula, tuple):
+        formula = formula[0]
+    return str(formula).strip()
 
 
 def extract_signals(formula):
@@ -65,10 +71,10 @@ def ltl_to_verilog(tlsf, prefix):
 def main():
     parser = argparse.ArgumentParser(description="Natural language to Verilog")
     parser.add_argument("--nl", required=True, help="requirement in natural language")
-    
+
     parser.add_argument("--inputs", help="comma separated inputs")
     parser.add_argument("--outputs", help="comma separated outputs")
-    
+
     parser.add_argument("--model", default="gpt-3.5-turbo", help="LLM model")
     parser.add_argument("--prompt", default="minimal", help="prompt file name in nl2spec/prompts")
     parser.add_argument("--prefix", default="controller", help="output file prefix")
