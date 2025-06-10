@@ -25,7 +25,13 @@ def nl_to_ltl(nl, model, prompt):
         temperature=0.2,
     )
     formula, _ = backend.call(args)
-    return formula.strip()
+    # backend.call returns a tuple where the first element is the LTL formula
+    # and the second is a certainty score.  The formula itself may be returned
+    # either as a string or as an object from ``ltlf2dfa``.  Convert it to a
+    # string before stripping whitespace.
+    if isinstance(formula, tuple):
+        formula = formula[0]
+    return str(formula).strip()
 
 
 def extract_signals(formula):
