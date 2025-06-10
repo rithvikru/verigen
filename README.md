@@ -20,9 +20,11 @@ The external tools are not included and must be installed separately.
 3. Run the pipeline:
    ```bash
    python3 nl2verilog.py --nl "Every request is eventually granted" \
-       --inputs req --outputs grant \
        --keyfile PATH/TO/oai_key.txt
    ```
-   The script writes `controller.v` containing the synthesized Verilog controller.
+   By default all signals found in the LTL formula are treated as outputs.  You
+   can still provide `--inputs` or `--outputs` to override the automatic
+   detection.  The script writes `controller.v` containing the synthesized
+   Verilog controller.
 
 The script assumes that `syfco`, `ltlsynt`, `aigtoaig`, and `abc` are available in the system `PATH`.
