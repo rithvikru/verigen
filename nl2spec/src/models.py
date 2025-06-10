@@ -11,14 +11,24 @@ from vertexai.preview.language_models import TextGenerationModel, CodeGeneration
 import prompting
 
 
-def gpt_35_turbo(args):
-    if args.keyfile != "":
+def _load_key(args, env_var, filename):
+    """Load API key from args, environment variable, or keydir."""
+    if getattr(args, "keyfile", ""):
         keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "oai_key.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+        if os.path.exists(keyfile):
+            return open(keyfile).readline().strip("\n")
+    env_value = os.environ.get(env_var)
+    if env_value:
+        return env_value.strip()
+    if getattr(args, "keydir", ""):
+        keyfile = os.path.join(args.keydir, filename)
+        if os.path.exists(keyfile):
+            return open(keyfile).readline().strip("\n")
+    raise Exception("No key provided.")
+
+
+def gpt_35_turbo(args):
+    key = _load_key(args, "OPENAI_API_KEY", "oai_key.txt")
     openai.api_key = key
     if args.num_tries == "":
         n = 3
@@ -43,13 +53,7 @@ def gpt_35_turbo(args):
 
 
 def gpt_4(args):
-    if args.keyfile != "":
-        keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "oai_key.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+    key = _load_key(args, "OPENAI_API_KEY", "oai_key.txt")
     openai.api_key = key
     if args.num_tries == "":
         n = 3
@@ -74,13 +78,7 @@ def gpt_4(args):
 
 
 def code_davinci_002(args):
-    if args.keyfile != "":
-        keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "oai_key.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+    key = _load_key(args, "OPENAI_API_KEY", "oai_key.txt")
     openai.api_key = key
     if args.num_tries == "":
         n = 3
@@ -107,13 +105,7 @@ def code_davinci_002(args):
 
 
 def text_davinci_003(args):
-    if args.keyfile != "":
-        keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "oai_key.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+    key = _load_key(args, "OPENAI_API_KEY", "oai_key.txt")
     openai.api_key = key
     if args.num_tries == "":
         n = 3
@@ -140,13 +132,7 @@ def text_davinci_003(args):
 
 
 def code_davinci_edit_001(args):
-    if args.keyfile != "":
-        keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "oai_key.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+    key = _load_key(args, "OPENAI_API_KEY", "oai_key.txt")
     openai.api_key = key
     if args.num_tries == "":
         n = 3
@@ -175,13 +161,7 @@ def code_davinci_edit_001(args):
 
 
 def text_bison_001(args):
-    if args.keyfile != "":
-        keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "google_project_id.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+    key = _load_key(args, "GOOGLE_PROJECT_ID", "google_project_id.txt")
     vertexai.init(project=key)
     model = TextGenerationModel.from_pretrained("text-bison@001")
     n = args.num_tries
@@ -200,13 +180,7 @@ def text_bison_001(args):
 
 
 def code_bison_001(args):
-    if args.keyfile != "":
-        keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "google_project_id.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+    key = _load_key(args, "GOOGLE_PROJECT_ID", "google_project_id.txt")
     vertexai.init(project=key)
     model = CodeGenerationModel.from_pretrained("code-bison@001")
     n = args.num_tries
@@ -230,13 +204,7 @@ def bloom(args):
     n = args.num_tries
     input_prompt = prompting.prompt(args)
     API_URL = "https://api-inference.huggingface.co/models/bigscience/bloom"
-    if args.keyfile != "":
-        keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "hf_key.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+    key = _load_key(args, "HF_API_TOKEN", "hf_key.txt")
     headers = {"Authorization": "Bearer " + key}
 
     def query(payload):
@@ -267,13 +235,7 @@ def bloomz(args):
     n = args.num_tries
     input_prompt = prompting.prompt(args)
     API_URL = "https://api-inference.huggingface.co/models/bigscience/bloomz"
-    if args.keyfile != "":
-        keyfile = args.keyfile
-    else:
-        keyfile = os.path.join(args.keydir, "hf_key.txt")
-    key = open(keyfile).readline().strip("\n")
-    if key == "":
-        raise Exception("No key provided.")
+    key = _load_key(args, "HF_API_TOKEN", "hf_key.txt")
     headers = {"Authorization": "Bearer " + key}
 
     def query(payload):

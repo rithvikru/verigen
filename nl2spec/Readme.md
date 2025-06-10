@@ -24,7 +24,7 @@ All model inferences run in the cloud. Therefore, access to the respective APIs 
 # Run frontend
 
 From inside the ```src``` folder:
-- create the following file and paste your open ai, hf key or google project id into: ```keys/oai_key.txt```, ```keys/hf_key.txt``` or ```keys/google_project_id.txt```
+- ensure the appropriate environment variable (`OPENAI_API_KEY`, `HF_API_TOKEN`, or `GOOGLE_PROJECT_ID`) is set
 - ```python3 -m flask --app frontend.py run```
 - add ```--debug``` for debug mode
 - Then open web-based tool at http://127.0.0.1:5000
@@ -35,15 +35,15 @@ Can also be run from command line from the ```scr``` folder. See ```python3 nl2l
 
 E.g., with gpt-3.5:
 
-```python3 nl2ltl.py --model gpt-3.5-turbo --keyfile PATH/TO/YOUR/OPENAIKEY --nl "Globally a and b until c." --num_tries 3 --temperature 0.2 --prompt minimal```
+```OPENAI_API_KEY=yourkey python3 nl2ltl.py --model gpt-3.5-turbo --nl "Globally a and b until c." --num_tries 3 --temperature 0.2 --prompt minimal```
 
 or bloom
 
-```python3 nl2ltl.py --model bloom --keyfile PATH/TO/YOUR/HFKEY --nl "Every request is eventually followed by a grant." --num_tries 3 --temperature 0.2 --prompt minimal```
+```HF_API_TOKEN=yourtoken python3 nl2ltl.py --model bloom --nl "Every request is eventually followed by a grant." --num_tries 3 --temperature 0.2 --prompt minimal```
 
 or PaLM
 
-```python3 nl2ltl.py --model text-bison@001 --keyfile PATH/TO/YOUR/GCLOUD/PROJECTID --nl "Every request is eventually followed by a grant." --num_tries 3 --temperature 0.2 --prompt minimal```
+```GOOGLE_PROJECT_ID=yourproject python3 nl2ltl.py --model text-bison@001 --nl "Every request is eventually followed by a grant." --num_tries 3 --temperature 0.2 --prompt minimal```
 
 # Prompting
 

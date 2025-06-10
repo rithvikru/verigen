@@ -16,13 +16,14 @@ The external tools are not included and must be installed separately.
    ```bash
    python3 -m pip install -r nl2spec/requirements.txt
    ```
-2. Provide an API key for the LLM in a file. For OpenAI models this is usually `oai_key.txt`.
+2. Set the `OPENAI_API_KEY` environment variable with your API token.
 3. Run the pipeline:
    ```bash
-   python3 nl2verilog.py --nl "Every request is eventually granted" \
-       --inputs req --outputs grant \
-       --keyfile PATH/TO/oai_key.txt
+   OPENAI_API_KEY=yourkey python3 nl2verilog.py --nl "Every request is eventually granted"
    ```
-   The script writes `controller.v` containing the synthesized Verilog controller.
+   By default all signals found in the LTL formula are treated as outputs.  You
+   can still provide `--inputs` or `--outputs` to override the automatic
+   detection.  The script writes `controller.v` containing the synthesized
+   Verilog controller.
 
 The script assumes that `syfco`, `ltlsynt`, `aigtoaig`, and `abc` are available in the system `PATH`.

@@ -54,7 +54,7 @@ def generate_intermediate_output(intermediate_translation):
 
 def prompt(args):
     inpt = args.nl
-    prompt_dir = os.path.join("..", "prompts")
+    prompt_dir = os.path.join(os.path.dirname(__file__), "..", "prompts")
     if args.prompt == "minimal":
         fixed_prompt_file = open(os.path.join(prompt_dir, "minimal.txt"))
         fixed_prompt = fixed_prompt_file.read()
